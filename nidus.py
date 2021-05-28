@@ -1,3 +1,9 @@
+'''
+Copyrights: ©2021 @Laffery
+Date: 2021-05-25 19:55:46
+LastEditor: Laffery
+LastEditTime: 2021-05-28 18:40:02
+'''
 from utils import image_filename
 import cv2
 import numpy as np
@@ -23,7 +29,7 @@ def find_nidus(filename, savename):
     def is4(n):
         return n[1] == 4
 
-    parenchyma_list = list(filter(is4, np.argwhere((status > 6000))))
+    parenchyma_list = list(filter(is4, np.argwhere((status > 1000))))
     parenchyma_list = [parenchyma[0] for parenchyma in parenchyma_list]
 
     for i in range(0, len(labels)):
