@@ -1,16 +1,13 @@
-from utils import image_savename
+from utils import image_filename
 import cv2
 import numpy as np
 
-def find_nidus
-
-if __name__ == '__main__':
-    src = cv2.imread(image_savename(0, 2))
+def find_nidus(filename, savename):
+    src = cv2.imread(filename)
     width = src.shape[1]
     height = src.shape[0]
 
-    cv2.imshow('src', src)
-
+    # cv2.imshow('src', src)
 
     gray = cv2.cvtColor(src, cv2.COLOR_RGB2GRAY)
     # _, gray = cv2.threshold(src, 108, 255, cv2.THRESH_BINARY)
@@ -21,7 +18,7 @@ if __name__ == '__main__':
                 gray[raw, i] = 255 if gray[raw, i] <= 108 else 0
 
     _, labels, status, _ = cv2.connectedComponentsWithStats(gray)
-    print (status)
+    # print (status)
 
     def is4(n):
         return n[1] == 4
@@ -34,7 +31,18 @@ if __name__ == '__main__':
             if labels[i, j] in parenchyma_list:
                 gray[i, j] = 0
 
-    cv2.imshow('tmp', gray)
+    # cv2.imshow('tmp', gray)
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    cv2.imwrite(savename, gray)
+
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+
+    for i in range(1, 21):
+        find_nidus(image_filename(0, i, '02'), image_filename(0, i, '03'))
+        find_nidus(image_filename(1, i, '02'), image_filename(1, i, '03'))
+
+    print ('Results saved as xx00003.jpg')
+    # find_nidus(image_filename(0, 2, '02'))

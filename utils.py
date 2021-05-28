@@ -5,23 +5,15 @@ IMAGE_DIR = './test'
 HONEY_DIR = '{}/{}'.format(IMAGE_DIR, 'honeycombing')
 RETCL_DIR = '{}/{}'.format(IMAGE_DIR, 'reticular')
 
-def image_filename(dir, index):
+def image_filename(dir, index, tag='01'):
     '''
     @dir 0->honeycombing; 1->reticular\\
     @index 1~20\\
+    @tag '01':src '02':肺实质 '03':病灶 
     Return filename of target image
     '''
     DIR = RETCL_DIR if dir else HONEY_DIR
-    return '{}/{}00001.jpg'.format(DIR, str(index).rjust(2, '0'))
-
-def image_savename(dir, index):
-    '''
-    @dir 0->honeycombing; 1->reticular\\
-    @index 1~20\\
-    Return save image as
-    '''
-    DIR = RETCL_DIR if dir else HONEY_DIR
-    return '{}/{}00002.jpg'.format(DIR, str(index).rjust(2, '0'))
+    return '{}/{}000{}.jpg'.format(DIR, str(index).rjust(2, '0'), tag)
 
 def image_resize(src, scale):
     '''

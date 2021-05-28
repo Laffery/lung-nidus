@@ -147,4 +147,4 @@ if __name__ == '__main__':
     #     recognize_parenchyma1(image_filename(1, i), image_savename(1, i))
 
     # print ('Results saved as xx00002.jpg')
-    recognize_parenchyma1(image_filename(1, 13), image_savename(1, 13))
+    recognize_parenchyma1(image_filename(1, 13), image_filename(1, 13, '02'))
