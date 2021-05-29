@@ -2,13 +2,13 @@
 Copyrights: ©2021 @Laffery
 Date: 2021-05-25 19:55:46
 LastEditor: Laffery
-LastEditTime: 2021-05-28 18:40:02
+LastEditTime: 2021-05-29 10:52:49
 '''
 from utils import image_filename
 import cv2
 import numpy as np
 
-def find_nidus(filename, savename):
+def find_nidus(filename, savename=''):
     src = cv2.imread(filename)
     width = src.shape[1]
     height = src.shape[0]
@@ -37,18 +37,23 @@ def find_nidus(filename, savename):
             if labels[i, j] in parenchyma_list:
                 gray[i, j] = 0
 
-    # cv2.imshow('tmp', gray)
+    cv2.imshow('tmp', gray)
 
-    cv2.imwrite(savename, gray)
+    element = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
+    dst = cv2.morphologyEx(gray, cv2.MORPH_CLOSE, element)
 
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow('res',dst)
+
+    # cv2.imwrite(savename, gray)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
 
-    for i in range(1, 21):
-        find_nidus(image_filename(0, i, '02'), image_filename(0, i, '03'))
-        find_nidus(image_filename(1, i, '02'), image_filename(1, i, '03'))
+    # for i in range(1, 21):
+    #     find_nidus(image_filename(0, i, '02'), image_filename(0, i, '03'))
+    #     find_nidus(image_filename(1, i, '02'), image_filename(1, i, '03'))
 
-    print ('Results saved as xx00003.jpg')
-    # find_nidus(image_filename(0, 2, '02'))
+    # print ('Results saved as xx00003.jpg')
+    find_nidus(image_filename(0, 1, '02'))

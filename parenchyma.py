@@ -2,7 +2,7 @@
 Copyrights: ©2021 @Laffery
 Date: 2021-05-25 19:38:29
 LastEditor: Laffery
-LastEditTime: 2021-05-28 23:17:49
+LastEditTime: 2021-05-29 10:54:17
 '''
 from utils import image_filename
 import cv2
@@ -56,22 +56,22 @@ def recognize_parenchyma(filename, savename):
     element = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10, 10))
     dst = cv2.morphologyEx(src, cv2.MORPH_CLOSE, element)
     
-    '''reticular目录下的图片可能会存在中间的大圆白，此注释内容保存该圆洞'''
-    # dst = cv2.bitwise_not(dst)
+    '''reticular目录下的图片可能会存在中间的大圆白，本部分内容保存该圆洞'''
+    dst = cv2.bitwise_not(dst)
 
-    # gray = cv2.cvtColor(dst, cv2.COLOR_RGB2GRAY)
-    # _, labels, status, _ = cv2.connectedComponentsWithStats(gray)
+    gray = cv2.cvtColor(dst, cv2.COLOR_RGB2GRAY)
+    _, labels, status, _ = cv2.connectedComponentsWithStats(gray)
 
-    # parenchyma_list = list(filter(is4, np.argwhere(status < 6000)))
-    # parenchyma_list = [parenchyma[0] for parenchyma in parenchyma_list]
+    parenchyma_list = list(filter(is4, np.argwhere(status < 6000)))
+    parenchyma_list = [parenchyma[0] for parenchyma in parenchyma_list]
 
-    # if len(parenchyma_list):
-    #     for i in range(0, len(labels)):
-    #         for j in range(0, len(labels[i])):
-    #             if labels[i, j] in parenchyma_list:
-    #                 dst[i, j] = BLACK
+    if len(parenchyma_list):
+        for i in range(0, len(labels)):
+            for j in range(0, len(labels[i])):
+                if labels[i, j] in parenchyma_list:
+                    dst[i, j] = BLACK
 
-    # dst = cv2.bitwise_not(dst)
+    dst = cv2.bitwise_not(dst)
 
     '''去除最大连通域，得到肺实质掩膜'''
     gray = cv2.cvtColor(dst, cv2.COLOR_RGB2GRAY)
@@ -104,4 +104,4 @@ if __name__ == '__main__':
         recognize_parenchyma(image_filename(1, i), image_filename(1, i, '02'))
 
     print ('Results saved as xx00002.jpg')
-    # recognize_parenchyma(image_filename(1, 13), image_filename(1, 13, '02'))
+    # recognize_parenchyma(image_filename(0, 13), image_filename(1, 13, '02'))
