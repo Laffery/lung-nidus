@@ -2,7 +2,7 @@
 Copyrights: ©2021 @Laffery
 Date: 2021-05-28 08:31:04
 LastEditor: Laffery
-LastEditTime: 2021-05-31 16:12:20
+LastEditTime: 2021-05-31 16:34:19
 '''
 # coding: utf-8
 
@@ -103,7 +103,7 @@ def calcIoU(dir, index, save=False):
         cv2.imwrite(image_filename(dir, index, '04'), view)
 
     return hit/(miss + hit)
-    
+
 if __name__ == '__main__':
     for index in range(1, 21):
         iou = calcIoU(0, index, True)
@@ -112,8 +112,8 @@ if __name__ == '__main__':
         print(iou, ' #网状 {}'.format(index))
 
     ## GLCM尝试，效果不佳
-    # image = image_filename(0, 2, '03');
-    # img=np.array(Image.cv2(image).convert('L'))
+    # image = image_filename(0, 2, '03')
+    # img = np.array(Image.open(image).convert('L'))
     # h,w = img.shape
 
     # mean = fast_glcm.fast_glcm_mean(img)
