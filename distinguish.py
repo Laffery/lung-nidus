@@ -2,7 +2,7 @@
 Copyrights: ©2021 @Laffery
 Date: 2021-05-28 08:31:04
 LastEditor: Laffery
-LastEditTime: 2021-05-31 16:34:19
+LastEditTime: 2021-06-11 11:38:48
 '''
 # coding: utf-8
 
@@ -69,29 +69,28 @@ def distinguishNidus(dir, index, show=False, se=(20, 20)):
 
     return res
 
-def calcIoU(dir, index, save=False):
+def calcIoU(dir, index, expe, ctrl, save=False):
+    '''
+    计算交并比 \\
+    @dir: 目录 \\
+    @index: 图片索引 \\
+    @expe: 实验组识别函数 \\
+    @ctrl: 对照组识别函数 \\
+    @save: 是否将生成的对比图保存 \\
+    '''
     res = distinguishNidus(dir, index)
-    std = resizeSnapshot(dir, index,)
+    std = resizeSnapshot(dir, index)
 
     miss = 0
     hit = 0
 
     for i in range(100, 420):
         for j in range(100, 420):
-            # 比较网状区域，对照组为绿色，实验组为绿色
-            if dir:
-                if YELLOW(std[i, j]):
-                    if GREEN(res[i, j]):
-                        hit = hit + 1
-                    else:
-                        miss = miss + 1
-            # 比较蜂窝状区域，对照组为紫色，实验组为紫色
-            else:
-                if PURPLE(std[i, j]):
-                    if PURPLE(res[i, j]):
-                        hit = hit + 1
-                    else:
-                        miss = miss + 1
+            if ctrl(std[i, j]):
+                if expe(res[i, j]):
+                    hit = hit + 1
+                else:
+                    miss = miss + 1
 
     if save:
         view = np.zeros([512, 1024, 3], np.uint8)
@@ -102,16 +101,32 @@ def calcIoU(dir, index, save=False):
 
         cv2.imwrite(image_filename(dir, index, '04'), view)
 
-    return hit/(miss + hit)
+    return hit/(miss + hit) if miss + hit else 0
+
+def main():
+    '''
+    实验组网状为绿色，蜂窝为紫色 \\
+    对照组：\\
+    蜂窝目录下，蜂窝为紫色，网状为黄色 \\
+    网状目录下，没有蜂窝状，网状为黄色 \\
+    '''
+    for index in range(1, 21):
+        iou = calcIoU(0, index, PURPLE, PURPLE, True)
+        print(f'{iou} #蜂窝 {index}')
+        iou = calcIoU(0, index, GREEN, YELLOW)
+        print(f'{iou} #蜂窝之网状 {index}')
+        iou = calcIoU(1, index, GREEN, YELLOW, True)
+        print(f'{iou} #网状 {index}')
+        iou = calcIoU(1, index, PURPLE, PURPLE)
+        print(f'{iou} #网状之蜂窝 {index}')
 
 if __name__ == '__main__':
-    for index in range(1, 21):
-        iou = calcIoU(0, index, True)
-        print(iou, ' #蜂窝 {}'.format(index))
-        iou = calcIoU(1, index, True)
-        print(iou, ' #网状 {}'.format(index))
+    main()
 
-    ## GLCM尝试，效果不佳
+# def GLCM():
+    '''
+    GLCM尝试，效果不佳
+    '''
     # image = image_filename(0, 2, '03')
     # img = np.array(Image.open(image).convert('L'))
     # h,w = img.shape
